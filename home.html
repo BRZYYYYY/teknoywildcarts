@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teknoy Wildcarts</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+</head>
+<body>
+    
+    <header>
+        <nav>
+            <div class="logo-container">
+                <h1 class="logo">Teknoy Wildcarts</h1>
+                <div class="menu-icon" id="menuIcon"><i class="ri-menu-line"></i></div>
+            </div>
+            <div class="search-cart">
+                <div class="user-section">
+                    <span class="user-greeting" id="userGreeting"></span>
+                    <a href="#" class="cart" id="cartButton">
+                        <i class="ri-shopping-cart-line"></i>
+                        <span class="cart-badge">0</span>
+                    </a>
+                    <button class="logout-btn" id="logoutButton" style="display: none;">Logout</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeAboutModal" class="close-btn"><i class="ri-close-line"></i></span>
+            <h2>About Wildcarts</h2>
+            <p>Welcome to Teknoy Wildcarts, your one-stop shop in buying your desired IMDC Merchandise and Products!</p>
+            <p>ㅤ</p>
+            <p2>Developed by: Ralph Matthew A. dela Fuente</p2>
+        </div>
+    </div>
+
+    <!-- Sizing Modal -->
+    <div id="sizingModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeSizingModal" class="close-btn"><i class="ri-close-line"></i></span>
+            <h2>Sizing Chart</h2>
+            <div id="sizingContent"></div>
+        </div>
+    </div>
+
+    <section class="products">
+        <div class="product-card">
+            <img src="images/item6.png" alt="SHS Women Uniform Tela">
+            <h3>SHS Women Uniform Tela</h3>
+            <p>₱800</p>
+            <div class="size-selection">
+                <label for="size1">Size:</label>
+                <select id="size1">
+                    <option value="" disabled selected>Select Size</option>
+                    <option value="STD">STD (Standard)</option>
+                    <option value="XL">XL (Extra Large)</option>
+                </select>
+            </div>
+            <button class="add-to-cart" data-name="SHS Women Uniform Tela" data-price="800" data-image="images/item6.png">Add to Cart</button>
+            <button class="show-sizing" data-type="uniform">Show Sizing</button>
+        </div>
+        <div class="product-card">
+            <img src="images/item7.png" alt="SHS Men Uniform Tela">
+            <h3>SHS Men Uniform Tela</h3>
+            <p>₱900</p>
+            <div class="size-selection">
+                <label for="size2">Size:</label>
+                <select id="size2">
+                    <option value="" disabled selected>Select Size</option>
+                    <option value="STD">STD (Standard)</option>
+                    <option value="XL">XL (Extra Large)</option>
+                </select>
+            </div>
+            <button class="add-to-cart" data-name="SHS Men Uniform Tela" data-price="900" data-image="images/item7.png">Add to Cart</button>
+            <button class="show-sizing" data-type="uniform">Show Sizing</button>
+        </div>
+
+        <div class="product-card">
+            <img src="images/item13.png" alt="SHS PE Top">
+            <h3>SHS PE Top</h3>
+            <p>₱270</p>
+            <div class="size-selection">
+                <label for="size3">Size:</label>
+                <select id="size3">
+                    <option value="" disabled selected>Select Size</option>
+                    <option value="S">S (Small)</option>
+                    <option value="M">M (Medium)</option>
+                    <option value="L">L (Large)</option>
+                </select>
+            </div>
+            <button class="add-to-cart" data-name="SHS PE Top" data-price="270" data-image="images/item13.png">Add to Cart</button>
+            <button class="show-sizing" data-type="shorts">Show Sizing</button>
+        </div>
+
+        <div class="product-card">
+            <img src="images/item8.png" alt="SHS PE Shorts">
+            <h3>SHS PE Shorts</h3>
+            <p>₱250</p>
+            <div class="size-selection">
+                <label for="size4">Size:</label> <!-- Duplicate ID issue still present -->
+                <select id="size4">
+                    <option value="" disabled selected>Select Size</option>
+                    <option value="S">S (Small)</option>
+                    <option value="M">M (Medium)</option>
+                    <option value="L">L (Large)</option>
+                </select>
+            </div>
+            <button class="add-to-cart" data-name="SHS PE Shorts" data-price="250" data-image="images/item8.png">Add to Cart</button>
+            <button class="show-sizing" data-type="shorts">Show Sizing</button>
+        </div>
+
+        <div class="product-card">
+            <img src="images/item9.png" alt="SHS PE Pants">
+            <h3>SHS PE Pants</h3>
+            <p>₱300</p>
+            <div class="size-selection">
+                <label for="size5">Size:</label>
+                <select id="size5">
+                    <option value="" disabled selected>Select Size</option>
+                    <option value="S">S (Small)</option>
+                    <option value="M">M (Medium)</option>
+                    <option value="L">L (Large)</option>
+                </select>
+            </div>
+            <button class="add-to-cart" data-name="SHS PE Pants" data-price="300" data-image="images/item9.png">Add to Cart</button>
+            <button class="show-sizing" data-type="shorts">Show Sizing</button>
+        </div>
+        <div class="product-card">
+            <img src="images/item11.png" alt="CIT Buttons">
+            <h3>CIT Buttons</h3>
+            <p>₱25</p>
+            <button class="add-to-cart" data-name="CIT Buttons" data-price="25" data-image="images/item11.png">Add to Cart</button>
+        </div>
+        <div class="product-card">
+            <img src="images/item10.png" alt="ID Slings">
+            <h3>ID Slings</h3>
+            <p>₱80</p>
+            <button class="add-to-cart" data-name="ID Slings" data-price="80" data-image="images/item10.png">Add to Cart</button>
+        </div>
+        <div class="product-card">
+            <img src="images/item12.png" alt="Lab Gown">
+            <h3>Lab Gown</h3>
+            <p>₱250</p>
+            <button class="add-to-cart" data-name="Lab Gown" data-price="250" data-image="images/item12.png">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+            <img src="images/item4.png" alt="Safety Goggles">
+            <h3>Safety Goggles</h3>
+            <p>₱150</p>
+            <button class="add-to-cart" data-name="Safety Goggles" data-price="150" data-image="images/item4.png">Add to Cart</button>
+        </div>
+
+        <div class="product-card">
+            <img src="images/item5.png" alt="Wildcats Tote Bag">
+            <h3>Wildcats Tote Bag</h3>
+            <p>₱100</p>
+            <button class="add-to-cart" data-name="Wildcats Tote Bag" data-price="100" data-image="images/item5.png">Add to Cart</button>
+        </div>
+    </section>
+
+    <!-- Cart Modal -->
+    <div id="cartModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeCartModal" class="close-btn"><i class="ri-close-line"></i></span>
+            <h2>Wildcart</h2>
+            <div id="cartItems"></div>
+            <p><strong>Total:</strong> ₱<span id="cartTotal">0</span></p>
+            <button id="buyNowCart" class="buy-now-cart">Buy Now</button>
+            <p style="color: grey; font-size: 0.8rem; text-align: center;">Sizing is based on standard measurements. Please refer to the sizing chart for details.</p>
+        </div>
+    </div>
+
+    <!-- QR Code Modal -->
+    <div id="qrModal" class="modal hidden">
+        <div class="modal-content">
+            <span id="closeQrModal" class="close-btn"><i class="ri-delete-bin-line"></i></span>
+            <h2>Proceed to Accounting</h2>
+            <canvas id="qrcode" class="qr-code"></canvas>
+            <p id="orderDetails"></p>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <div class="disclaimer">
+            Disclaimer: The prices and sizes displayed on this shop are for demonstration purposes only and may not reflect the actual prices or available sizes of the products.
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
