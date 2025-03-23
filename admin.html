@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Dashboard - Teknoy Wildcarts</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include Remixicon for icons -->
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <!-- Include QRCode and jsQR libraries via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
@@ -27,7 +30,7 @@
     <!-- Recent Orders Modal -->
     <div class="modal" id="recentOrdersModal">
         <div class="modal-content">
-            <span class="close-btn" id="closeRecentOrdersModal">&times;</span>
+            <span class="close-btn" id="closeRecentOrdersModal">×</span>
             <h2>Recent Orders</h2>
             <div id="recentOrdersList"></div>
         </div>
@@ -36,7 +39,7 @@
     <div class="admin-section">
         <h2>Scan QR Code to View Orders</h2>
         <div class="scanner-container">
-            <video id="video" autoplay playsinline></video>
+            <video id="video" autoplay playsinline="true"></video>
             <canvas id="canvas" style="display: none;"></canvas>
         </div>
         <button id="startScanner" class="scanner-btn">Start Scanner</button>
