@@ -46,6 +46,7 @@ const recentOrdersList = document.getElementById("recentOrdersList");
 const orderSummary = document.getElementById("orderSummary");
 const adminActions = document.getElementById("adminActions");
 const markPaidButton = document.getElementById("markPaid");
+const backToAdminButton = document.getElementById("backToAdmin");
 const userActions = document.getElementById("userActions");
 const markUserPaidButton = document.getElementById("markUserPaid");
 
@@ -81,7 +82,7 @@ function displayScannedOrders() {
     });
 }
 
-// Display recent orders in the modal
+// Display recent orders in the modal with delete buttons
 function displayRecentOrders() {
     if (!recentOrdersList) return;
     recentOrdersList.innerHTML = "";
@@ -90,6 +91,7 @@ function displayRecentOrders() {
         orderDiv.classList.add("recent-order");
         orderDiv.innerHTML = `
             <h3>Order ${index + 1}</h3>
+            <button class="delete-order-btn" data-index="${index}"><i class="ri-close-line"></i></button>
             <p><strong>Student ID:</strong> ${order.studentId || "Unknown"}</p>
             <p><strong>Total:</strong> ₱${order.total}</p>
             <p><strong>Items:</strong></p>
@@ -99,6 +101,15 @@ function displayRecentOrders() {
             <p><strong>Status:</strong> ${order.paid ? "Paid (Admin)" : order.userPaid ? "Paid (User)" : "Pending"}</p>
         `;
         recentOrdersList.appendChild(orderDiv);
+
+        // Add event listener for delete button
+        const deleteButton = orderDiv.querySelector(".delete-order-btn");
+        deleteButton.addEventListener("click", () => {
+            scannedOrders.splice(index, 1);
+            saveScannedOrders();
+            displayRecentOrders();
+            displayScannedOrders();
+        });
     });
 }
 
@@ -457,7 +468,7 @@ if (buyNowCartButton) {
         // Create URL with query parameters for QR code (use absolute path)
         const itemsParam = encodeURIComponent(JSON.stringify(cart));
         const studentId = localStorage.getItem("userId");
-        const orderUrl = `https://brzyyyyy.github.io/teknoywildcarts/order-details.html?items=${itemsParam}&studentId=${encodeURIComponent(studentId)}`;
+        const orderUrl = `https://brzyyyyy.github.io/teknoy-wildcarts/order-details.html?items=${itemsParam}&studentId=${encodeURIComponent(studentId)}`;
 
         // Clear the cart immediately after clicking "Buy Now"
         cart = [];
@@ -677,9 +688,9 @@ if (orderSummary) {
             });
         }
 
-        // Admin actions: "Mark as Paid" button
+        // Admin actions: "Mark as Paid" and "Back to Admin Home" buttons
         if (loginType === "admin" && adminActions) {
-            adminActions.style.display = "block";
+            adminActions.style.display = "flex"; // Ensure flex display for buttons
 
             if (orderIndex !== -1 && scannedOrders[orderIndex].paid) {
                 markPaidButton.disabled = true;
@@ -695,6 +706,13 @@ if (orderSummary) {
                     alert("Order marked as paid by admin.");
                 }
             });
+
+            // Add event listener for "Back to Admin Home" button
+            if (backToAdminButton) {
+                backToAdminButton.addEventListener("click", () => {
+                    window.location.href = "./admin.html";
+                });
+            }
         }
     } else {
         orderSummary.innerHTML = "<p>No order details found.</p>";
