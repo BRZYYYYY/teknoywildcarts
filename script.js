@@ -37,13 +37,17 @@ const startScannerButton = document.getElementById("startScanner");
 const stopScannerButton = document.getElementById("stopScanner");
 const scannedOrdersContainer = document.getElementById("scannedOrders");
 
+// Recent orders modal elements
+const recentOrdersModal = document.getElementById("recentOrdersModal");
+const closeRecentOrdersModal = document.getElementById("closeRecentOrdersModal");
+const recentOrdersList = document.getElementById("recentOrdersList");
+
 // Order details page elements
 const orderSummary = document.getElementById("orderSummary");
 const adminActions = document.getElementById("adminActions");
 const markPaidButton = document.getElementById("markPaid");
 const userActions = document.getElementById("userActions");
 const markUserPaidButton = document.getElementById("markUserPaid");
-const saveOrderButton = document.getElementById("saveOrder");
 
 let stream = null;
 let scanning = false;
@@ -55,6 +59,7 @@ function saveScannedOrders() {
     localStorage.setItem("scannedOrders", JSON.stringify(scannedOrders));
 }
 
+// Modified displayScannedOrders to include student ID
 function displayScannedOrders() {
     if (!scannedOrdersContainer) return;
     scannedOrdersContainer.innerHTML = "";
@@ -63,6 +68,7 @@ function displayScannedOrders() {
         orderDiv.classList.add("scanned-order");
         orderDiv.innerHTML = `
             <h3>Order ${index + 1}</h3>
+            <p><strong>Student ID:</strong> ${order.studentId || "Unknown"}</p>
             <p><strong>Total:</strong> ₱${order.total}</p>
             <p><strong>Items:</strong></p>
             ${order.items.map(item => `
@@ -72,6 +78,27 @@ function displayScannedOrders() {
             <p><strong>User Status:</strong> ${order.userPaid ? "Paid" : "Pending"}</p>
         `;
         scannedOrdersContainer.appendChild(orderDiv);
+    });
+}
+
+// Display recent orders in the modal
+function displayRecentOrders() {
+    if (!recentOrdersList) return;
+    recentOrdersList.innerHTML = "";
+    scannedOrders.forEach((order, index) => {
+        const orderDiv = document.createElement("div");
+        orderDiv.classList.add("recent-order");
+        orderDiv.innerHTML = `
+            <h3>Order ${index + 1}</h3>
+            <p><strong>Student ID:</strong> ${order.studentId || "Unknown"}</p>
+            <p><strong>Total:</strong> ₱${order.total}</p>
+            <p><strong>Items:</strong></p>
+            ${order.items.map(item => `
+                <p>Item: ${item.name}, Size: ${item.size}, Quantity: ${item.quantity}</p>
+            `).join("")}
+            <p><strong>Status:</strong> ${order.paid ? "Paid (Admin)" : order.userPaid ? "Paid (User)" : "Pending"}</p>
+        `;
+        recentOrdersList.appendChild(orderDiv);
     });
 }
 
@@ -188,7 +215,7 @@ if (loginForm) {
 }
 
 // Toggle about modal with animation
-if (menuIcon) {
+if (menuIcon && aboutModal) {
     menuIcon.addEventListener("click", () => {
         aboutModal.classList.add("active");
         aboutModal.classList.remove("hidden");
@@ -199,6 +226,22 @@ if (closeAboutModal) {
     closeAboutModal.addEventListener("click", () => {
         aboutModal.classList.add("hidden");
         setTimeout(() => aboutModal.classList.remove("active"), 300);
+    });
+}
+
+// Toggle recent orders modal
+if (menuIcon && recentOrdersModal) {
+    menuIcon.addEventListener("click", () => {
+        displayRecentOrders();
+        recentOrdersModal.classList.add("active");
+        recentOrdersModal.classList.remove("hidden");
+    });
+}
+
+if (closeRecentOrdersModal) {
+    closeRecentOrdersModal.addEventListener("click", () => {
+        recentOrdersModal.classList.add("hidden");
+        setTimeout(() => recentOrdersModal.classList.remove("active"), 300);
     });
 }
 
@@ -413,7 +456,8 @@ if (buyNowCartButton) {
 
         // Create URL with query parameters for QR code (use absolute path)
         const itemsParam = encodeURIComponent(JSON.stringify(cart));
-        const orderUrl = `https://brzyyyyy.github.io/teknoywildcarts/order-details.html?items=${itemsParam}`;
+        const studentId = localStorage.getItem("userId");
+        const orderUrl = `https://brzyyyyy.github.io/teknoy-wildcarts/order-details.html?items=${itemsParam}&studentId=${encodeURIComponent(studentId)}`;
 
         // Clear the cart immediately after clicking "Buy Now"
         cart = [];
@@ -472,16 +516,25 @@ function animateCartBadge() {
 if (startScannerButton) {
     startScannerButton.addEventListener("click", async () => {
         try {
-            stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+            // Request camera with specific constraints for better iOS compatibility
+            stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: "environment",
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                } 
+            });
             video.srcObject = stream;
+            video.setAttribute("playsinline", "true"); // Ensure inline playback on iOS
             video.play();
             startScannerButton.style.display = "none";
             stopScannerButton.style.display = "inline-block";
             scanning = true;
+            console.log("Camera started successfully. Video dimensions:", video.videoWidth, video.videoHeight);
             scanQRCode();
         } catch (err) {
             console.error("Error accessing camera:", err);
-            alert("Unable to access camera. Please ensure you have granted permission.");
+            alert("Unable to access camera. Please ensure you have granted permission and are using a secure context (HTTPS).");
         }
     });
 }
@@ -495,36 +548,60 @@ if (stopScannerButton) {
             scanning = false;
             startScannerButton.style.display = "inline-block";
             stopScannerButton.style.display = "none";
+            console.log("Camera stopped.");
         }
     });
 }
 
-// Scan QR code
+// Scan QR code with improved iOS compatibility
 function scanQRCode() {
-    if (!scanning) return;
+    if (!scanning) {
+        console.log("Scanning stopped.");
+        return;
+    }
 
-    const context = canvas.getContext("2d");
+    // Ensure video dimensions are set
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        console.warn("Video dimensions not ready yet. Retrying...");
+        requestAnimationFrame(scanQRCode);
+        return;
+    }
+
+    // Set canvas dimensions to match video
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
     context.drawImage(video, 0, 0, canvas.width, canvas.height);
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+    // Use jsQR to detect QR code
+    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+        inversionAttempts: "dontInvert" // Optimize for performance
+    });
 
     if (code) {
+        console.log("QR Code detected:", code.data);
         const url = code.data;
         // Check if the URL is an order-details URL
         if (url.includes("order-details.html?items=")) {
-            const itemsParam = new URL(url).searchParams.get("items");
+            const urlObj = new URL(url);
+            const itemsParam = urlObj.searchParams.get("items");
+            const studentId = urlObj.searchParams.get("studentId");
             const items = JSON.parse(decodeURIComponent(itemsParam));
             const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-            scannedOrders.push({ items, total, paid: false, userPaid: false });
+            scannedOrders.push({ items, total, paid: false, userPaid: false, studentId });
             saveScannedOrders();
             displayScannedOrders();
             // Stop scanning after successful scan
             stopScannerButton.click();
             // Redirect to order-details page
             window.location.href = url;
+        } else {
+            console.log("Scanned QR code is not an order-details URL:", url);
         }
+    } else {
+        console.log("No QR code detected in this frame.");
     }
 
     if (scanning) {
@@ -543,6 +620,7 @@ if (orderSummary) {
     const loginType = localStorage.getItem("loginType");
     const userId = localStorage.getItem("userId");
     const itemsParam = getQueryParam("items");
+    const studentId = getQueryParam("studentId");
     let items = [];
     if (itemsParam) {
         try {
@@ -554,7 +632,10 @@ if (orderSummary) {
 
     if (items.length > 0) {
         let total = 0;
-        let orderDetailsText = `Order Details for ${userId}\n\n`; // For saving to file
+        const orderDetailsDiv = document.createElement("div");
+        orderDetailsDiv.innerHTML = `<p><strong>Student ID:</strong> ${studentId || userId || "Unknown"}</p>`;
+        orderSummary.appendChild(orderDetailsDiv);
+
         items.forEach(item => {
             const itemTotal = item.price * item.quantity;
             total += itemTotal;
@@ -568,14 +649,10 @@ if (orderSummary) {
                 <hr>
             `;
             orderSummary.appendChild(itemDiv);
-
-            // Add to text for saving
-            orderDetailsText += `Item: ${item.name}\nSize: ${item.size}\nQuantity: ${item.quantity}\nPrice: ₱${item.price}\n\n`;
         });
         const totalDiv = document.createElement("div");
         totalDiv.innerHTML = `<p><strong>Total:</strong> ₱${total.toFixed(2)}</p>`;
         orderSummary.appendChild(totalDiv);
-        orderDetailsText += `Total: ₱${total.toFixed(2)}\n`;
 
         // Find the order in scannedOrders
         const orderIndex = scannedOrders.findIndex(order => 
@@ -597,22 +674,6 @@ if (orderSummary) {
                     markUserPaidButton.textContent = "Order Already Paid";
                     alert("Order marked as paid by user.");
                 }
-            });
-        }
-
-        // User actions: "Save Order Details" button
-        if (saveOrderButton) {
-            saveOrderButton.addEventListener("click", () => {
-                const blob = new Blob([orderDetailsText], { type: "text/plain" });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = `order-details-${userId}.txt`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-                alert("Order details saved successfully!");
             });
         }
 
