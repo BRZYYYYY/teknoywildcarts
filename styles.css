@@ -707,6 +707,7 @@ header nav:hover {
     border-radius: 8px;
     margin-bottom: 1rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
 .recent-order h3 {
@@ -718,6 +719,23 @@ header nav:hover {
 .recent-order p {
     color: #333;
     margin: 0.3rem 0;
+}
+
+.delete-order-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    color: #cc0000;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.delete-order-btn:hover {
+    color: #ff4444;
+    transform: scale(1.1);
 }
 
 /* Login Page Styles */
@@ -844,8 +862,10 @@ header nav:hover {
 
 .login-type {
     display: flex;
+    flex-wrap: wrap; /* Allow wrapping to prevent overflow */
     gap: 1rem;
     justify-content: center;
+    align-items: center; /* Center vertically */
     margin-bottom: 1rem;
 }
 
@@ -857,6 +877,8 @@ header nav:hover {
     font-size: 0.9rem;
     color: #333;
     cursor: pointer;
+    display: flex;
+    align-items: center;
 }
 
 .login-type label:hover {
@@ -962,6 +984,9 @@ header nav:hover {
 /* Admin Actions on Order Details */
 .admin-actions {
     margin: 1rem 0;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
 }
 
 .mark-paid-btn {
@@ -982,6 +1007,21 @@ header nav:hover {
 .mark-paid-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}
+
+.back-to-admin-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.back-to-admin-btn:hover {
+    background-color: #555;
+    transform: scale(1.05);
 }
 
 /* Keyframes for Animations */
@@ -1086,6 +1126,11 @@ header nav:hover {
     }
 
     .user-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .admin-actions {
         flex-direction: column;
         gap: 0.5rem;
     }
@@ -1194,6 +1239,17 @@ header nav:hover {
     .scanner-btn {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+    }
+
+    .login-type {
+        flex-direction: row;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-type label {
+        font-size: 0.8rem;
     }
 }
 
