@@ -468,7 +468,7 @@ if (buyNowCartButton) {
         // Create URL with query parameters for QR code (use absolute path)
         const itemsParam = encodeURIComponent(JSON.stringify(cart));
         const studentId = localStorage.getItem("userId");
-        const orderUrl = `https://brzyyyyy.github.io/teknoy-wildcarts/order-details.html?items=${itemsParam}&studentId=${encodeURIComponent(studentId)}`;
+        const orderUrl = `https://brzyyyyy.github.io/teknoywildcarts/order-details.html?items=${itemsParam}&studentId=${encodeURIComponent(studentId)}`;
 
         // Clear the cart immediately after clicking "Buy Now"
         cart = [];
