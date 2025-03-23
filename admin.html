@@ -3,37 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Teknoy Wildcarts</title>
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 </head>
 <body>
     <header>
         <nav>
             <div class="logo-container">
-                <h1 class="logo">Teknoy Wildcarts - Admin</h1>
+                <i class="ri-menu-line menu-icon" id="menuIcon"></i>
+                <h1 class="logo">Teknoy Wildcarts</h1>
             </div>
             <div class="search-cart">
                 <div class="user-section">
                     <span class="user-greeting" id="userGreeting"></span>
-                    <button class="logout-btn" id="logoutButton">Logout</button>
+                    <button class="logout-btn" id="logoutButton" style="display: none;">Logout</button>
                 </div>
             </div>
         </nav>
     </header>
 
-    <section class="admin-section">
+    <!-- Recent Orders Modal -->
+    <div class="modal" id="recentOrdersModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeRecentOrdersModal">&times;</span>
+            <h2>Recent Orders</h2>
+            <div id="recentOrdersList"></div>
+        </div>
+    </div>
+
+    <div class="admin-section">
         <h2>Scan QR Code to View Orders</h2>
         <div class="scanner-container">
-            <video id="video" width="100%" height="auto" autoplay></video>
+            <video id="video" autoplay playsinline></video>
             <canvas id="canvas" style="display: none;"></canvas>
         </div>
         <button id="startScanner" class="scanner-btn">Start Scanner</button>
         <button id="stopScanner" class="scanner-btn" style="display: none;">Stop Scanner</button>
-        <div id="scannedOrders" class="scanned-orders"></div>
-    </section>
+        <div class="scanned-orders" id="scannedOrders"></div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
